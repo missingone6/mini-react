@@ -1,5 +1,6 @@
 import { updateHostComponent, updateClassComponent, updateFragmentComponent, updateFunctionComponent, updateHostTextComponent } from './ReactFiberReconciler';
 import { ClassComponent, Fragment, FunctionComponent, HostComponent, HostText } from './ReactWorkTags'
+import { schedulerCallback } from './scheduler';
 import { Placement } from './utils';
 let workInProgress = null; //当前正在工作的树
 let workInProgressRoot = null; 
@@ -8,6 +9,7 @@ let workInProgressRoot = null;
 export function schedulerUpdateOnFiber(fiber) {
   workInProgress = fiber;
   workInProgressRoot = fiber;
+  schedulerCallback(workLoop);
 }
 
 function performUnitOfWork() {
@@ -46,8 +48,8 @@ function performUnitOfWork() {
   workInProgress = null;
 }
 
-function workLoop(IdleDeadline) {
-  while (workInProgress && IdleDeadline.timeRemaining() > 0) {
+function workLoop() {
+  while (workInProgress) {
     performUnitOfWork(workInProgress);
   }
   if (!workInProgress && workInProgressRoot) {
@@ -75,7 +77,7 @@ function commitWorker(workInProgress) {
   commitWorker(workInProgress.sibling);
 }
 
-window.requestIdleCallback(workLoop);
+// window.requestIdleCallback(workLoop);
 
 function getParentNode(workInProgress) {
   let temp = workInProgress;
