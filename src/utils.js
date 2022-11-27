@@ -27,7 +27,7 @@ export function isSymbol(s) {
 export function updateNode(node, nextVal) {
   Object.keys(nextVal).forEach(key => {
     if (key === 'children') {
-      if (isStr(nextVal[key])) {
+      if (isStringOrNumber(nextVal[key])) {
         node.textContent = nextVal[key]
       }
     } else {
