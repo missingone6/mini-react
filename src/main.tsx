@@ -4,16 +4,17 @@
 import {
   ReactDOM,
   Component,
-  // useReducer,
-  // useState,
+  useReducer,
+  useState,
   // useEffect,
   // useLayoutEffect,
 } from "../which-react";
 
 // import "./index.css";
 
-function FunctionComponent(props: { name: string }) {
-  // const [count, setCount] = useReducer((x) => x + 1, 0);
+function FunctionComponent() {
+  const [count, setCount] = useReducer((x: any) => x + 1, 0);
+  const [count1, setCount1] = useState(1);
   // const [count2, setCount2] = useState(0);
 
   // useEffect(() => {
@@ -26,8 +27,7 @@ function FunctionComponent(props: { name: string }) {
 
   return (
     <div className="border">
-      <p>{props.name}</p>
-      <FunctionComponent2 />
+      <p onClick={() => setCount1(count1 + 1)}>{count1}</p>
     </div>
   );
   //       <button onClick={() => setCount()}>{count}</button>
@@ -90,11 +90,12 @@ function FunctionComponent2() {
 }
 const jsx = (
   <div className="border">
-    <h1>react</h1>
-    <a href="https://github.com/bubucuo/mini-react">mini react</a>
-    <FunctionComponent name="函数组件" />
-    <ClassComponent name="类组件" />
-    <FragmentComponent />
+    {/* <h1>react</h1> */}
+    {/*<a href="https://github.com/bubucuo/mini-react">mini react</a> */}
+    <FunctionComponent />
+    <FunctionComponent />
+    {/* <ClassComponent name="类组件" /> */}
+    {/* <FragmentComponent /> */}
   </div>
 );
 
