@@ -1,9 +1,9 @@
 import { updateHostComponent, updateClassComponent, updateFragmentComponent, updateFunctionComponent, updateHostTextComponent } from './ReactFiberReconciler';
 import { ClassComponent, Fragment, FunctionComponent, HostComponent, HostText } from './ReactWorkTags'
 import { schedulerCallback } from './scheduler';
-import { Placement } from './utils';
+import { Placement, Update, updateNode } from './utils';
 let workInProgress = null; //当前正在工作的树
-let workInProgressRoot = null; 
+let workInProgressRoot = null;
 
 // 初次渲染和更新
 export function schedulerUpdateOnFiber(fiber) {
@@ -72,6 +72,8 @@ function commitWorker(workInProgress) {
   if (flags & Placement && stateNode) {
     // todo 找到父节点
     fatherStateNode.appendChild(stateNode);
+  } else if (flags & Update && stateNode) {
+    updateNode(stateNode, workInProgress.alternate.props, workInProgress.props)
   }
   commitWorker(workInProgress.child);
   commitWorker(workInProgress.sibling);

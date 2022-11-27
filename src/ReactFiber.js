@@ -16,6 +16,11 @@ export function createFiber(vNode, returnFiber) {
 
     // 记录节点在当前层级下的位置
     index: null,
+
+    // 用来判断是否是初次渲染
+    alternate: null,
+    // 存放hook
+    memorizedState: null,
   }
   // console.log(vNode, vNode.type)
   const { type } = vNode;

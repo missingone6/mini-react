@@ -20,4 +20,5 @@
 
 import ReactDOM from "./src/react-dom.js";
 import { Component } from "./src/react.js";
-export { ReactDOM ,Component};
+import { useReducer, useState } from './src/hooks.js'
+export { ReactDOM, Component, useReducer, useState };
