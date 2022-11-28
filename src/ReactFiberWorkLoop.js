@@ -72,7 +72,8 @@ function commitWorker(workInProgress) {
   if (flags & Placement && stateNode) {
     // todo 找到父节点
     fatherStateNode.appendChild(stateNode);
-  } else if (flags & Update && stateNode) {
+  }
+  if (flags & Update && stateNode) {
     updateNode(stateNode, workInProgress.alternate.props, workInProgress.props)
   }
   if (flags & Deletion && stateNode) {
