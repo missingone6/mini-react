@@ -13,7 +13,7 @@ import {
 // import "./index.css";
 
 function FunctionComponent() {
-  const [count, setCount] = useReducer((x: any) => x + 1, 0);
+  // const [count, setCount] = useReducer((x: any) => x + 1, 0);
   const [count1, setCount1] = useState(1);
   // const [count2, setCount2] = useState(0);
 
@@ -28,6 +28,7 @@ function FunctionComponent() {
   return (
     <div className="border">
       <p onClick={() => setCount1(count1 + 1)}>{count1}</p>
+      {count1 % 2 ? <span>111</span> : <div>222</div>}
     </div>
   );
   //       <button onClick={() => setCount()}>{count}</button>
@@ -93,7 +94,7 @@ const jsx = (
     {/* <h1>react</h1> */}
     {/*<a href="https://github.com/bubucuo/mini-react">mini react</a> */}
     <FunctionComponent />
-    <FunctionComponent />
+    {/* <FunctionComponent /> */}
     {/* <ClassComponent name="类组件" /> */}
     {/* <FragmentComponent /> */}
   </div>

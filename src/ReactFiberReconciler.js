@@ -1,6 +1,6 @@
 import { renderWithHooks } from "./hooks";
 import { createFiber } from "./ReactFiber";
-import { isArray, isSameType, isStringOrNumber, Update, updateNode } from "./utils";
+import { Deletion, isArray, isSameType, isStringOrNumber, Update, updateNode } from "./utils";
 
 export function updateHostComponent(workInProgress) {
   if (!workInProgress.stateNode) {
@@ -43,12 +43,15 @@ function reconcileChildren(workInProgress, children) {
     }
     const fiber = createFiber(newChild, workInProgress);
     if (oldFiber) {
-      if (isSameType(oldFiber, fiber)) {
+      if (isSameType(oldFiber, oldFiber)) {
         Object.assign(fiber, {
           flags: Update,
           stateNode: oldFiber.stateNode,
           alternate: oldFiber
         })
+      } else {
+        // 有oldFiber并且不能复用，要删除
+        deleteChild(workInProgress, oldFiber)
       }
       oldFiber = oldFiber.sibling;
     }
@@ -58,5 +61,14 @@ function reconcileChildren(workInProgress, children) {
       previousFiber.sibling = fiber;
     }
     previousFiber = fiber;
+  }
+}
+
+function deleteChild(returnFiber, childToDelete) {
+  fiber.flags |= Deletion;
+  if (!returnFiber.deletions) {
+    returnFiber.deletions = [childToDelete];
+  } else {
+    returnFiber.deletions.push(childToDelete)
   }
 }

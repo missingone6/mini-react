@@ -1,7 +1,7 @@
 import { updateHostComponent, updateClassComponent, updateFragmentComponent, updateFunctionComponent, updateHostTextComponent } from './ReactFiberReconciler';
 import { ClassComponent, Fragment, FunctionComponent, HostComponent, HostText } from './ReactWorkTags'
 import { schedulerCallback } from './scheduler';
-import { Placement, Update, updateNode } from './utils';
+import { Deletion, Placement, Update, updateNode } from './utils';
 let workInProgress = null; //当前正在工作的树
 let workInProgressRoot = null;
 
@@ -75,6 +75,9 @@ function commitWorker(workInProgress) {
   } else if (flags & Update && stateNode) {
     updateNode(stateNode, workInProgress.alternate.props, workInProgress.props)
   }
+  if (flags & Deletion && stateNode) {
+    commitToDeletions(workInProgress.deletions, stateNode || fatherStateNode)
+  }
   commitWorker(workInProgress.child);
   commitWorker(workInProgress.sibling);
 }
@@ -89,4 +92,19 @@ function getParentNode(workInProgress) {
     }
     temp = temp.return;
   }
+}
+function getChildNode(workInProgress) {
+  let temp = workInProgress;
+  while (temp) {
+    if (temp.stateNode) {
+      return temp.stateNode;
+    }
+    temp = temp.child;
+  }
+}
+
+function commitToDeletions(deletions, fatherStateNode) {
+  deletions.forEach(item => {
+    fatherStateNode.removeChild(getChildNode(item))
+  });
 }
