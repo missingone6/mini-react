@@ -28,7 +28,15 @@ function FunctionComponent() {
   return (
     <div className="border">
       <p onClick={() => setCount1(count1 + 1)}>{count1}</p>
-      {count1 % 2 ? <span>111</span> : <div>222</div>}
+      {/* {count1 % 2 ? <span>111</span> : <div>222</div>} */}
+      <ul>
+        {
+          [1, 2, 3, 4, 5].map((value, index) => {
+            return count1 % 2 ? <li key={index}>{value}</li> : null;
+          })
+        }
+      </ul>
+
     </div>
   );
   //       <button onClick={() => setCount()}>{count}</button>

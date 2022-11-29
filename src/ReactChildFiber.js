@@ -9,7 +9,8 @@ export function reconcileChildren(workInProgress, children) {
   const newChildren = isArray(children) ? children : [children]
   let previousFiber = null;
   let oldFiber = workInProgress.alternate?.child;
-  for (let i = 0; i < newChildren.length; i++) {
+  let i;
+  for (i = 0; i < newChildren.length; i++) {
     const newChild = newChildren[i];
     if (newChild === null || newChild === undefined) {
       continue;
@@ -35,13 +36,26 @@ export function reconcileChildren(workInProgress, children) {
     }
     previousFiber = fiber;
   }
+  // 新节点（children数组）已经遍历完，但是老节点（oldFiber链表）还有剩余的情况
+  if (i === newChildren.length) {
+    deleteRemainingChildren(workInProgress, oldFiber)
+  }
+
 }
 
 function deleteChild(returnFiber, childToDelete) {
-  fiber.flags |= Deletion;
+  // fiber.flags |= Deletion; 改用fiber.deletions
   if (!returnFiber.deletions) {
     returnFiber.deletions = [childToDelete];
   } else {
     returnFiber.deletions.push(childToDelete)
+  }
+}
+
+function deleteRemainingChildren(returnFiber, currentFirstChild) {
+  let childToDelete = currentFirstChild;
+  while (childToDelete) {
+    deleteChild(returnFiber, childToDelete);
+    childToDelete = childToDelete.sibling;
   }
 }

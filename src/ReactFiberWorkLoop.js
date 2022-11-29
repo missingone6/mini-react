@@ -76,7 +76,8 @@ function commitWorker(workInProgress) {
   if (flags & Update && stateNode) {
     updateNode(stateNode, workInProgress.alternate.props, workInProgress.props)
   }
-  if (flags & Deletion && stateNode) {
+  if (workInProgress.deletions && stateNode) {
+    console.log(2)
     commitToDeletions(workInProgress.deletions, stateNode || fatherStateNode)
   }
   commitWorker(workInProgress.child);
