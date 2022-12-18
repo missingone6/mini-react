@@ -21,6 +21,8 @@ export function createFiber(vNode, returnFiber) {
     alternate: null,
     // 存放hook
     memorizedState: null,
+    // 存放要删除的子节点
+    deletions: null,
   }
   // console.log(vNode, vNode.type)
   const { type } = vNode;

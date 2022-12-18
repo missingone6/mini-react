@@ -31,9 +31,13 @@ function FunctionComponent() {
       {/* {count1 % 2 ? <span>111</span> : <div>222</div>} */}
       <ul>
         {
-          [1, 2, 3, 4, 5].map((value, index) => {
-            return count1 % 2 ? <li key={index}>{value}</li> : null;
-          })
+          count1 % 2 === 0
+            ? [1,3,4].map((value, index) => {
+              return <li key={value}>{value}</li>
+            })
+            : [1, 2, 3, 4].map((value, index) => {
+              return <li key={value}>{value}</li>
+            })
         }
       </ul>
 
