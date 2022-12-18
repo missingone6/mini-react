@@ -68,16 +68,17 @@ function commitWorker(workInProgress) {
   }
   // 提交自己，子节点，兄弟
   const { flags, stateNode } = workInProgress;
-  const fatherStateNode = getParentNode(workInProgress.return);
+  // 找到父节点
+  const parentStateNode = getParentNode(workInProgress.return);
   if (flags & Placement && stateNode) {
-    // todo 找到父节点
-    fatherStateNode.appendChild(stateNode);
+    const before = getHostSibling(workInProgress.sibling);
+    // 多节点diff时，优先使用原生节点的insertBefore方法插入
+    insertOrAppendPlacementNode(parentStateNode, stateNode, before);
   }
   if (flags & Update && stateNode) {
     updateNode(stateNode, workInProgress.alternate.props, workInProgress.props)
   }
   if (workInProgress.deletions && stateNode) {
-    console.log(2)
     commitToDeletions(workInProgress.deletions, stateNode || fatherStateNode)
   }
   commitWorker(workInProgress.child);
@@ -110,3 +111,22 @@ function commitToDeletions(deletions, fatherStateNode) {
     fatherStateNode.removeChild(getChildNode(item))
   });
 }
+
+function getHostSibling(sibling) {
+  while (sibling) {
+    if (sibling.stateNode && !(sibling.flags & Placement)) {
+      return sibling.stateNode;
+    }
+    sibling = sibling.sibling;
+  }
+  return null;
+}
+
+function insertOrAppendPlacementNode(parentStateNode, stateNode, before) {
+  if (before) {
+    parentStateNode.insertBefore(stateNode, before)
+  } else {
+    parentStateNode.appendChild(stateNode);
+  }
+}
+
